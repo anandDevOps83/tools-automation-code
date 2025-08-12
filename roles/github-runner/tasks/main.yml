@@ -46,7 +46,7 @@
   ansible.builtin.shell: ./config.sh --url https://github.com/anandDevOps83 --token {{ token.stdout }} --runnergroup Default --name ec2 --labels rhel --work _work --replace
   args:
     chdir: /actions-runner
-  become:user: grunner
+  become_user: grunner
   when: runner_count.stdout == "0"
 
 - name: Install Runner Service
