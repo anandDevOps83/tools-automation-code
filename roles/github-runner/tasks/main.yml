@@ -1,2 +1,56 @@
-- debug:
-    msg: Hello Test
+- name: Set Prompt
+  ansible.builtin.shell: set-prompt github-runner
+
+- name: Add GitHub runner User
+  ansible.builtin.user:
+    name: grunner
+
+- name: Create Github Directory
+  ansible.builtin.file:
+    path: /actions-runner
+    state: directory
+    owner: grunner
+    group: grunner
+
+- name: Download & Extract runner
+  ansible.builtin.unarchive:
+    src: https://github.com/actions/runner/releases/download/v2.327.1/actions-runner-linux-x64-2.327.1.tar.gz
+    dest: "/actions-runner"
+    remote_src: yes
+    owner: grunner
+    group: grunner
+
+- name: Downlod HitHun CLI Repo File
+  ansible.builtin.get_url:
+    url: https://cli.github.com/packages/rpm/gh-cli.repo
+    dest: /etc/yum.repos.d/gh-cli.repo
+
+- name: Install libicu Dependency
+  ansible.builtin.dnf:
+    name: gh
+    state: latest
+
+- name: Grab Token
+  ansible.builtin.shell: |
+    gh api --method POST -H "Accept: application/vnd.github+json" /orgs/anandDevOps83/actions/runners/registration-token
+  register: token
+  become_user: ec2-user
+
+- name: Get runner Count
+  ansible.builtin.shell: |
+    gh api -H "Accept: application/vnd.github+json" /orgs/anandDevOps83/actions/runners | jq .total_count |xargs
+  register: runner_count
+  become_user: ec2-user
+
+- name: Configure Github runner
+  ansible.builtin.shell: ./config.sh --url https://github.com/anandDevOps83 --token {{ token.stdout }} --runnergroup Default --name ec2 --labels rhel --work _work --replace
+  args:
+    chdir: /actions-runner
+  become:user: grunner
+  when: runner_count.stdout == "0"
+
+- name: Install Runner Service
+  ansible.builtin.shell: ./svc.sh install ; ./svc.sh start
+  args:
+    chdir: /actions-runner
+  when: runner_count.stdout == "0"      
