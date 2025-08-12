@@ -32,7 +32,7 @@
 
 - name: Grab Token
   ansible.builtin.shell: |
-    gh api --method POST -H "Accept: application/vnd.github+json" /orgs/anandDevOps83/actions/runners/registration-token
+    gh api --method POST -H "Accept: application/vnd.github+json" /orgs/anandDevOps83/actions/runners/registration-token | jq .token
   register: token
   become_user: ec2-user
 
