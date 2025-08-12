@@ -1,3 +1,6 @@
+# Manual Setps
+# gh auth login -s admin:org
+
 - name: Set Prompt
   ansible.builtin.shell: set-prompt github-runner
 
