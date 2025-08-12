@@ -1,4 +1,6 @@
 # Manual Setps
+# sudo curl -L -o /etc/yum.repos.d/gh-cli.repo https://cli.github.com/packages/rpm/gh-cli.repo
+# sudo dnf install gh -y
 # gh auth login -s admin:org
 
 - name: Set Prompt
@@ -7,17 +9,6 @@
 - name: Add GitHub runner User
   ansible.builtin.user:
     name: grunner
-
-- name: Downlod HitHun CLI Repo File
-  ansible.builtin.get_url:
-    url: https://cli.github.com/packages/rpm/gh-cli.repo
-    dest: /etc/yum.repos.d/gh-cli.repo
-
-- name: Install GitHub CLI
-  ansible.builtin.dnf:
-    name: gh
-    state: latest
-
 
 - name: Create Github Directory
   ansible.builtin.file:
