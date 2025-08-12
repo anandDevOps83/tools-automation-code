@@ -5,6 +5,17 @@
   ansible.builtin.user:
     name: grunner
 
+- name: Downlod HitHun CLI Repo File
+  ansible.builtin.get_url:
+    url: https://cli.github.com/packages/rpm/gh-cli.repo
+    dest: /etc/yum.repos.d/gh-cli.repo
+
+- name: Install GitHub CLI
+  ansible.builtin.dnf:
+    name: gh
+    state: latest
+
+
 - name: Create Github Directory
   ansible.builtin.file:
     path: /actions-runner
@@ -20,14 +31,9 @@
     owner: grunner
     group: grunner
 
-- name: Downlod HitHun CLI Repo File
-  ansible.builtin.get_url:
-    url: https://cli.github.com/packages/rpm/gh-cli.repo
-    dest: /etc/yum.repos.d/gh-cli.repo
-
 - name: Install libicu Dependency
   ansible.builtin.dnf:
-    name: gh
+    name: libicu
     state: latest
 
 - name: Grab Token
