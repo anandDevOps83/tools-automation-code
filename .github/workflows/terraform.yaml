@@ -1,7 +1,7 @@
 name: Provision Infra Tools
 on: [workflow_dispatch]
 jobs:
-  Provision:
+  Tool_Provision:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
