@@ -55,6 +55,12 @@
     chdir: /actions-runner
   when: runner_count.stdout == "0"      
 
+- name: Start Runner Service listener
+  ansible.builtin.shell: ./runsvc.sh &
+  args:
+    chdir: /actions-runner
+  when: runner_count.stdout == "0" 
+
 - name: Download Terraform Repo file
   ansible.builtin.get_url:
     url: https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
