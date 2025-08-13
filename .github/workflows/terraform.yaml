@@ -8,4 +8,4 @@ jobs:
       - name: Terrafrom Init
         run: terraform init
       - name: Terraform Apply
-        run: terrafrom apply -auto-approve
+        run: terraform apply -auto-approve
