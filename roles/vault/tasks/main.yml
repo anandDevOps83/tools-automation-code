@@ -10,3 +10,11 @@
   ansible.builtin.dnf:
     name: vault
     state: latest
+
+- name: Start Vault Service
+  ansible.builtin.systemd_service:
+    name: vault
+    enabled: true
+    state: restarted
+
+        
