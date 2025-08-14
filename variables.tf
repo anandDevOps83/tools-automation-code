@@ -6,6 +6,7 @@ variable "tools" {
             policy_name = [
                 "AdministratorAccess"
             ]
+            ports       = {}
         }
 
         vault = {
