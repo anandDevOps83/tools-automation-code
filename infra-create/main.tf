@@ -35,7 +35,34 @@ resource "aws_security_group" "tool-sg" {
     cidr_blocks      = ["0.0.0.0/0"]
   }
 
+    dynamic "ingress" {
+    for_each = var.ports
+    content {
+      from_port        = ingress.value
+      to_port          = ingress.value
+      protocol         = "TCP"
+      cidr_blocks      = ["0.0.0.0/0"]
+      description      = ingress.key
+    }
+  }
+
   tags = {
     Name = "${var.name}-sg"
   }
+}
+
+resource "aws_route53_record" "record-public" {
+  zone_id = var.hosted_zone_id
+  name    = var.name
+  type    = "A"
+  ttl            = 10
+  records        = [aws_instance.tools.public_ip]
+}
+
+resource "aws_route53_record" "record-private" {
+  zone_id = var.hosted_zone_id
+  name    = "${var.name}-internal"
+  type    = "A"
+  ttl            = 10
+  records        = [aws_instance.tools.private_ip]
 }

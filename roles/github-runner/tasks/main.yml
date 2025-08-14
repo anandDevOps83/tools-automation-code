@@ -53,13 +53,19 @@
   ansible.builtin.shell: ./svc.sh install ; ./svc.sh start
   args:
     chdir: /actions-runner
-  when: runner_count.stdout == "0"      
+  when: runner_count.stdout == "0"
+
+- name: Check Status of GitHub runner listener
+  ansible.builtin.shell: |
+    gh api -H "Accept: application/vnd.github+json" /orgs/anandDevOps83/actions/runners | jq '.runners[] | select(.name == "ec2") | .status'       
+  register: runner_status
+  become_user: ec2-user
 
 - name: Start Runner Service listener
   ansible.builtin.shell: ./runsvc.sh &
   args:
     chdir: /actions-runner
-  when: runner_count.stdout == "0" 
+  when: runner_status.stdout == "offline" 
 
 - name: Download Terraform Repo file
   ansible.builtin.get_url:
