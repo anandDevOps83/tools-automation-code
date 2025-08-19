@@ -54,6 +54,7 @@
     src: path
     dest: /actions-runner/.path
   become_user: grunner
+  when: runner_count.stdout == "0"  
 
 - name: Install Runner Service
   ansible.builtin.shell: ./svc.sh install ; ./svc.sh start
