@@ -57,7 +57,7 @@
   when: runner_count.stdout == "0"  
 
 - name: Install Runner Service
-  ansible.builtin.shell: ./svc.sh install ; ./svc.sh start
+  ansible.builtin.shell: ./svc.sh install; ./svc.sh start
   args:
     chdir: /actions-runner
   when: runner_count.stdout == "0"
